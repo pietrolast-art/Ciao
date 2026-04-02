@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AniGuessr</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- SPLASH SCREEN -->
+  <div id="splash" class="screen active">
+    <div class="splash-content">
+      <h1 class="logo">AniGuessr</h1>
+      <p class="tagline">Guess the anime from the cover art</p>
+      <div class="rules">
+        <div class="rule"><span class="rule-icon">🎯</span> 5 rounds per game</div>
+        <div class="rule"><span class="rule-icon">🔍</span> Image gets less blurry with each wrong guess</div>
+        <div class="rule"><span class="rule-icon">⭐</span> Fewer guesses = more points</div>
+        <div class="rule"><span class="rule-icon">💡</span> Max 5 guesses per round</div>
+      </div>
+      <button id="start-btn" class="btn btn-primary">Start Game</button>
+      <p id="loading-msg" class="loading-msg hidden">Loading anime data…</p>
+    </div>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="game" class="screen">
+    <header class="game-header">
+      <div class="header-left">
+        <span class="round-label">Round <span id="round-num">1</span> / 5</span>
+      </div>
+      <div class="header-center">
+        <h1 class="logo-small">AniGuessr</h1>
+      </div>
+      <div class="header-right">
+        <span class="score-label">Score: <span id="score">0</span></span>
+      </div>
+    </header>
+
+    <main class="game-main">
+      <div class="image-container">
+        <img id="anime-image" src="" alt="Guess this anime" />
+        <div id="blur-overlay"></div>
+      </div>
+
+      <div class="guess-section">
+        <div class="attempts-row">
+          <span class="attempts-label">Guesses left:</span>
+          <div id="attempt-dots" class="attempt-dots"></div>
+        </div>
+
+        <div id="guesses-list" class="guesses-list"></div>
+
+        <div id="input-area" class="input-area">
+          <div class="search-wrapper">
+            <input
+              id="guess-input"
+              type="text"
+              placeholder="Search anime title…"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <div id="suggestions" class="suggestions hidden"></div>
+          </div>
+          <button id="guess-btn" class="btn btn-guess">Guess</button>
+        </div>
+
+        <div id="skip-row" class="skip-row">
+          <button id="skip-btn" class="btn btn-skip">Skip round</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ROUND RESULT OVERLAY -->
+  <div id="round-result" class="overlay hidden">
+    <div class="overlay-card">
+      <div id="result-icon" class="result-icon"></div>
+      <h2 id="result-title"></h2>
+      <p id="result-answer" class="result-answer"></p>
+      <p id="result-points" class="result-points"></p>
+      <div id="result-image-wrap" class="result-image-wrap">
+        <img id="result-image" src="" alt="" />
+      </div>
+      <button id="next-btn" class="btn btn-primary">
+        <span id="next-btn-label">Next Round</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- END SCREEN -->
+  <div id="end" class="screen">
+    <div class="end-content">
+      <h1 class="logo">Game Over!</h1>
+      <div id="final-score-wrap" class="final-score-wrap">
+        <p class="final-score-label">Your Score</p>
+        <div id="final-score" class="final-score">0</div>
+        <p id="final-max" class="final-max">/ 25</p>
+      </div>
+      <div id="end-grade" class="end-grade"></div>
+      <div id="round-summary" class="round-summary"></div>
+      <button id="play-again-btn" class="btn btn-primary">Play Again</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
