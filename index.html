@@ -4,106 +4,200 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AniGuessr</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- SPLASH SCREEN -->
-  <div id="splash" class="screen active">
-    <div class="splash-content">
-      <h1 class="logo">AniGuessr</h1>
-      <p class="tagline">Guess the anime from the cover art</p>
-      <div class="rules">
-        <div class="rule"><span class="rule-icon">🎯</span> 5 rounds per game</div>
-        <div class="rule"><span class="rule-icon">🔍</span> Image gets less blurry with each wrong guess</div>
-        <div class="rule"><span class="rule-icon">⭐</span> Fewer guesses = more points</div>
-        <div class="rule"><span class="rule-icon">💡</span> Max 5 guesses per round</div>
-      </div>
-      <button id="start-btn" class="btn btn-primary">Start Game</button>
-      <p id="loading-msg" class="loading-msg hidden">Loading anime data…</p>
-    </div>
-  </div>
+<div class="app">
 
-  <!-- GAME SCREEN -->
-  <div id="game" class="screen">
-    <header class="game-header">
-      <div class="header-left">
-        <span class="round-label">Round <span id="round-num">1</span> / 5</span>
-      </div>
-      <div class="header-center">
-        <h1 class="logo-small">AniGuessr</h1>
-      </div>
-      <div class="header-right">
-        <span class="score-label">Score: <span id="score">0</span></span>
-      </div>
-    </header>
+  <!-- ── SIDEBAR ──────────────────────────────── -->
+  <aside class="sidebar">
+    <a class="logo" href="#" id="logo-link">AniGuessr</a>
 
-    <main class="game-main">
-      <div class="image-container">
-        <img id="anime-image" src="" alt="Guess this anime" />
-        <div id="blur-overlay"></div>
-      </div>
+    <nav class="nav-links">
+      <a class="nav-item active" data-mode="screenshot" href="#">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        Guess The Anime
+      </a>
+      <a class="nav-item" data-mode="characters" href="#">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Guess The Characters
+      </a>
+      <a class="nav-item" data-mode="opening" href="#">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        Guess The Opening
+      </a>
+      <a class="nav-item" data-mode="ending" href="#">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>
+        Guess The Ending
+      </a>
+      <a class="nav-item" data-mode="anidle" href="#">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Anidle
+      </a>
+    </nav>
 
-      <div class="guess-section">
-        <div class="attempts-row">
-          <span class="attempts-label">Guesses left:</span>
-          <div id="attempt-dots" class="attempt-dots"></div>
+    <div class="sidebar-footer">
+      <div class="footer-links">
+        <a href="#">News</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+        <a href="#">Suggest an anime</a>
+        <a href="#">Anime Database</a>
+        <a href="#">Support us</a>
+      </div>
+      <div class="login-section">
+        <span class="login-link">Log in</span>
+      </div>
+      <div class="today-score">
+        <span>Today score:</span>
+        <div class="score-right">
+          <span id="sidebar-score" class="today-pts">0</span>
+          <span class="score-max">/ 100 000</span>
         </div>
+      </div>
+    </div>
+  </aside>
 
-        <div id="guesses-list" class="guesses-list"></div>
+  <!-- ── MAIN CONTENT ──────────────────────────── -->
+  <div class="main-wrapper">
 
-        <div id="input-area" class="input-area">
-          <div class="search-wrapper">
-            <input
-              id="guess-input"
-              type="text"
-              placeholder="Search anime title…"
-              autocomplete="off"
-              spellcheck="false"
-            />
-            <div id="suggestions" class="suggestions hidden"></div>
+    <!-- HOME SCREEN -->
+    <div id="screen-home" class="screen active">
+      <div class="home-content">
+        <h1 class="home-logo">AniGuessr</h1>
+        <p class="home-news"><strong>March skin and more:</strong> <a href="#">check the news!</a></p>
+
+        <div class="modes-section">
+          <h2 class="modes-title">GUESS THE ANIME</h2>
+          <div class="modes-grid">
+            <div class="mode-card" data-target="screenshot">
+              <div class="mode-card-title">... with a screenshot</div>
+              <div class="mode-card-desc">Guess the anime with random screenshots</div>
+            </div>
+            <div class="mode-card" data-target="characters">
+              <div class="mode-card-title">... characters</div>
+              <div class="mode-card-desc">Guess characters with portraits</div>
+            </div>
+            <div class="mode-card half" data-target="opening">
+              <div class="mode-card-title">... with opening</div>
+              <div class="mode-card-desc">Guess the anime with opening</div>
+            </div>
+            <div class="mode-card half" data-target="ending">
+              <div class="mode-card-title">... with ending</div>
+              <div class="mode-card-desc">Guess the anime with ending</div>
+            </div>
+            <div class="mode-card half" data-target="anidle">
+              <div class="mode-card-title">Anidle</div>
+              <div class="mode-card-desc">Guess the anime of the day with clues from your previous guesses</div>
+            </div>
+            <div class="mode-card half" data-target="hard">
+              <div class="mode-card-title">Hard mode</div>
+              <div class="mode-card-desc">Unlimited Anidle mode</div>
+            </div>
           </div>
-          <button id="guess-btn" class="btn btn-guess">Guess</button>
-        </div>
-
-        <div id="skip-row" class="skip-row">
-          <button id="skip-btn" class="btn btn-skip">Skip round</button>
         </div>
       </div>
-    </main>
-  </div>
-
-  <!-- ROUND RESULT OVERLAY -->
-  <div id="round-result" class="overlay hidden">
-    <div class="overlay-card">
-      <div id="result-icon" class="result-icon"></div>
-      <h2 id="result-title"></h2>
-      <p id="result-answer" class="result-answer"></p>
-      <p id="result-points" class="result-points"></p>
-      <div id="result-image-wrap" class="result-image-wrap">
-        <img id="result-image" src="" alt="" />
-      </div>
-      <button id="next-btn" class="btn btn-primary">
-        <span id="next-btn-label">Next Round</span>
-      </button>
     </div>
-  </div>
 
-  <!-- END SCREEN -->
-  <div id="end" class="screen">
-    <div class="end-content">
-      <h1 class="logo">Game Over!</h1>
-      <div id="final-score-wrap" class="final-score-wrap">
-        <p class="final-score-label">Your Score</p>
-        <div id="final-score" class="final-score">0</div>
-        <p id="final-max" class="final-max">/ 25</p>
+    <!-- GUESS THE ANIME SCREEN -->
+    <div id="screen-screenshot" class="screen">
+      <div class="game-title-row">
+        <h1 class="game-title">GUESS THE ANIME</h1>
       </div>
-      <div id="end-grade" class="end-grade"></div>
-      <div id="round-summary" class="round-summary"></div>
-      <button id="play-again-btn" class="btn btn-primary">Play Again</button>
-    </div>
-  </div>
 
-  <script src="game.js"></script>
+      <div class="round-row">
+        <span class="round-label">Round <span id="round-num">1</span></span>
+        <span id="difficulty-badge" class="badge badge-easy">Easy</span>
+      </div>
+
+      <div class="screenshot-wrap">
+        <div id="screenshot-loading" class="screenshot-loading">Loading…</div>
+        <img id="screenshot-img" src="" alt="Guess this anime" class="screenshot-img hidden" />
+        <div id="clue-overlay" class="clue-overlay hidden"></div>
+      </div>
+
+      <div class="clue-tabs" id="clue-tabs">
+        <button class="clue-tab active" data-clue="0">ORIGINAL SCREENSHOT</button>
+        <button class="clue-tab locked" data-clue="1" id="clue-btn-1">
+          <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          UNLOCK FIRST CLUE
+        </button>
+        <button class="clue-tab locked" data-clue="2" id="clue-btn-2">
+          <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          UNLOCK SECOND CLUE
+        </button>
+        <button class="clue-tab locked" data-clue="3" id="clue-btn-3">
+          <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          UNLOCK TITLE CLUE
+        </button>
+      </div>
+
+      <div id="clue-info" class="clue-info hidden"></div>
+
+      <div id="guess-feedback" class="guess-feedback hidden"></div>
+
+      <div class="guess-area">
+        <div class="guess-input-wrap">
+          <input id="guess-input" type="text" placeholder="Type your answer here" autocomplete="off" spellcheck="false" />
+          <div id="suggestions" class="suggestions hidden"></div>
+        </div>
+        <button id="guess-btn" class="btn-guess">GUESS</button>
+      </div>
+
+      <div class="guess-history" id="guess-history"></div>
+
+      <div class="give-up-row">
+        <button id="give-up-btn" class="btn-give-up">Give up</button>
+      </div>
+    </div>
+
+    <!-- ROUND RESULT SCREEN -->
+    <div id="screen-result" class="screen">
+      <div class="result-card">
+        <div id="result-status-icon" class="result-status-icon"></div>
+        <h2 id="result-heading" class="result-heading"></h2>
+        <p id="result-subtitle" class="result-subtitle"></p>
+        <div class="result-img-wrap">
+          <img id="result-img" src="" alt="" />
+          <div class="result-title-badge" id="result-title-badge"></div>
+        </div>
+        <div id="result-score-delta" class="result-score-delta"></div>
+        <button id="result-next-btn" class="btn-pink result-next-btn">Next Round →</button>
+      </div>
+    </div>
+
+    <!-- GAME OVER SCREEN -->
+    <div id="screen-gameover" class="screen">
+      <div class="gameover-content">
+        <h1 class="gameover-title">Game Over!</h1>
+        <div class="gameover-score-card">
+          <p class="gameover-score-label">Final Score</p>
+          <div id="gameover-score" class="gameover-score">0</div>
+          <p class="gameover-max">/ 100 000</p>
+        </div>
+        <div id="gameover-grade" class="gameover-grade"></div>
+        <div id="gameover-summary" class="gameover-summary"></div>
+        <button id="play-again-btn" class="btn-pink play-again-btn">Play Again</button>
+      </div>
+    </div>
+
+    <!-- COMING SOON SCREEN -->
+    <div id="screen-soon" class="screen">
+      <div class="soon-content">
+        <div class="soon-icon">🚧</div>
+        <h2>Coming Soon</h2>
+        <p>This game mode is not yet available.</p>
+        <button id="soon-back-btn" class="btn-pink">← Back to Home</button>
+      </div>
+    </div>
+
+  </div><!-- end main-wrapper -->
+</div><!-- end app -->
+
+<script src="game.js"></script>
 </body>
 </html>
